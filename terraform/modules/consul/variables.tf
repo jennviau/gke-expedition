@@ -1,0 +1,10 @@
+variable "credentials" { default = "your_account.json" }
+variable "project"     { default = "your_project_id" }
+variable "region"      { default = "northamerica-northeast1" }
+variable "zone"        { default = "northamerica-northeast1-a" }
+variable "gke_cluster_name" { default = "yourclustername" }
+variable "gke_cluster_user" { default = "your_cluster_user" }
+variable "gke_cluster_pwd"  { default = "your_cluster_pwd" }
+variable "gke_cluster_node_count"  { default = "3" }
+variable "gke_cluster_node_version"       { default = "1.8.7-gke.1" }
+variable "gke_cluster_min_master_version" { default = "1.8.7-gke.1" }
