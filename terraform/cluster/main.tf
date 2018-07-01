@@ -4,7 +4,7 @@ module "cluster" {
   settings = {
     project                = "${var.project_name}"
     region_name            = "${var.region}"
-    cluster_node_count     = 2
+    cluster_node_count     = "${var.initial_node_count}"
     zone_amount            = 3
     cluster_name           = "${var.cluster_name}"
     gke_min_master_version = "1.9.7-gke.3"

@@ -10,7 +10,7 @@ variable "region" {
 
 variable "cluster_name" {
   type    = "string"
-  default = "expedition"
+  default = "keycloak-ha"
 }
 
 variable "master_username" {

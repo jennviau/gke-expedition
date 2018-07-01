@@ -2,18 +2,6 @@ variable "settings" {
   default = {}
 }
 
-variable "project_name" {
-  type    = "string"
-  default = ""
-}
-
-variable "region" {
-  type    = "string"
-  default = "northamerica-northeast1"
-}
-
-variable "credentials_file" {}
-
 locals {
   default_settings = {
     http_load_balancing      = true
