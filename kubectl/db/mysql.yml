@@ -1,0 +1,51 @@
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: db
+  namespace: keycloak
+spec:
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: mariadb
+    spec:
+      containers:
+        - name: mariadb
+          image: gcr.io/keycloak-208622/mariadb:10.1
+          ports:
+            - containerPort: 3306
+              name: mysql
+            - containerPort: 4444
+              name: sst
+            - containerPort: 4567
+              name: replication
+            - containerPort: 4567
+              protocol: UDP
+              name: replicationudp
+            - containerPort: 4568
+              name: ist
+          env:
+            - name: MYSQL_RANDOM_ROOT_PASSWORD
+              value: "yes"
+            - name: MYSQL_DATABASE
+              value: keycloak
+            - name: MYSQL_USER
+              value: keycloak
+            - name: MYSQL_PASSWORD
+              value: keycloak
+            - name: MYSQL_INITDB_SKIP_TZINFO
+              value: "yes"
+          args:
+            - --wsrep-new-cluster
+            # https://issues.jboss.org/browse/KEYCLOAK-3873
+            #- --character-set-server=utf8mb4
+            #- --collation-server=utf8mb4_unicode_ci
+          volumeMounts:
+            - name: datadir
+              mountPath: /var/lib/mysql
+      volumes:
+        - name: datadir
+          emptyDir: {}
+---

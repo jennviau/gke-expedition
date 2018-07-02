@@ -1,6 +1,12 @@
+//Google Provider Info
 variable "project_name" {
   type    = "string"
   default = "keycloak-208622"
+}
+
+variable "name_space" {
+  type    = "string"
+  default = "keycloak"
 }
 
 variable "region" {
@@ -8,6 +14,7 @@ variable "region" {
   default = "northamerica-northeast1"
 }
 
+// Kubernetes Cluster Info
 variable "cluster_name" {
   type    = "string"
   default = "keycloak-ha"
@@ -20,7 +27,7 @@ variable "master_username" {
 
 variable "master_password" {
   type    = "string"
-  default = "eycloak-cluster-admin"
+  default = "keycloak-cluster-admin"
 }
 
 variable "image_type" {
@@ -37,3 +44,7 @@ variable "initial_node_count" {
   type    = "string"
   default = 2
 }
+
+
+// App Config
+

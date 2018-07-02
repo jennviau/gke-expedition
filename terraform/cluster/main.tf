@@ -13,5 +13,14 @@ module "cluster" {
     node_machine_type      = "${var.node_type}"
     node_disk_size         = "100"
     node_image_type        = "${var.image_type}"
+    private_cluster        = false
   }
+}
+
+module "keycloak" {
+  source = "./keycloak"
+}
+
+module "dns" {
+  source = "./dns"
 }

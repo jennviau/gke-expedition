@@ -10,6 +10,7 @@ resource "google_container_cluster" "cluster" {
   initial_node_count = "${local.merged_settings["cluster_node_count"]}"
   min_master_version = "${local.merged_settings["gke_min_master_version"]}"
   enable_legacy_abac = "${local.merged_settings["enable_legacy_abac"]}"
+  private_cluster    = "${local.merged_settings["private_cluster"]}"
 
   master_auth {
     username = "${local.merged_settings["master_username"]}"
@@ -33,11 +34,5 @@ resource "google_container_cluster" "cluster" {
       "https://www.googleapis.com/auth/logging.write",
       "https://www.googleapis.com/auth/monitoring",
     ]
-  }
-
-  addons_config {
-    http_load_balancing {
-      disabled = "${local.merged_settings["http_load_balancing"] == true ? false : true}"
-    }
   }
 }
