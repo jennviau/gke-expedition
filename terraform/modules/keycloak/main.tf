@@ -1,7 +1,3 @@
-module "dns" {
-  source = "../dns"
-}
-
 resource "kubernetes_namespace" "keycloak" {
   metadata {
     name = "keycloak"
@@ -264,53 +260,9 @@ resource "kubernetes_service" "keycloak" {
       app = "${kubernetes_replication_controller.keycloak.metadata.0.labels.app}"
     }
 
-    port {
-      port        = 8080
-      name        = "http"
-      target_port = 8080
-    }
-
-    port {
-      port        = 8443
-      name        = "https"
-      target_port = 8443
-    }
-
-    type             = "LoadBalancer"
-    load_balancer_ip = "${module.dns.ip_address}"
+    type             = "ClusterIP"
   }
 }
 
-/*resource "kubernetes_service" "keycloak-lb" {
-   metadata {
-    name      = "keycloak-external"
-    namespace = "${var.name_space}"
 
-    labels {
-      app     = "keycloak"
-      service = "extenal"
-    }
-  }
-
-  spec {
-    selector {
-      service = "${kubernetes_service.keycloak.metadata.0.labels.service}"
-    }
-
-    port {
-      port        = 8080
-      name        = "http"
-      target_port = 8080
-    }
-
-    port {
-      port        = 8443
-      name        = "https"
-      target_port = 8443
-    }
-
-    type             = "LoadBalancer"
-    load_balancer_ip = "${google_compute_address.keycloak-static.address}"
-  }
-} */
 

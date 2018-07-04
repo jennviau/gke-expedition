@@ -1,26 +1,42 @@
 module "cluster" {
   source = "../modules/gke"
 
-  settings = {
-    project                = "${var.project_name}"
-    region_name            = "${var.region}"
-    cluster_node_count     = "${var.initial_node_count}"
+  settings = 
+    {
+    project                = "keycloak-208622}"
+    region_name            = "northamerica-northeast1"
+    cluster_node_count     = 2
     zone_amount            = 3
-    cluster_name           = "${var.cluster_name}"
+    cluster_name           = "keycloak-ha"
     gke_min_master_version = "1.9.7-gke.3"
-    master_username        = "${var.master_username}"
-    master_password        = "${var.master_password}"
-    node_machine_type      = "${var.node_type}"
+    node_machine_type      = "COS"
     node_disk_size         = "100"
-    node_image_type        = "${var.image_type}"
+    node_image_type        = "n1-standard-1"
     private_cluster        = false
-  }
-}
+    }
 
 module "keycloak" {
-  source = "./keycloak"
+  source = "../modules/keycloak"
+  //auth
+  client_certificate = "${module.gke.client_certificate}"
+  client_key = "${module.gke.client_key}"
+  cluster_ca_certificate = "${module.gke.cluster_ca_certificate}"
+  host = 
+  //keycloak vars
+  name_space = "keycloak"
+  app_name   = "keycloak"
+  app_image  = "gcr.io/keycloak-208622/keycloak-ha-mysql:latest"
+
+  // db vars
+  db_name =   "mariadb"
+  db_image = "gcr.io/keycloak-208622/mariadb:10.1"
+  db_service_name = "mysql"
+
 }
 
 module "dns" {
-  source = "./dns"
+  source = "../modules/dns"
+  ip_address = "{$module.keycloak.ip_address}"
+  static_zone = "automateit"
+  static_name = "gke"
 }

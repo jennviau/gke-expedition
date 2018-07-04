@@ -1,4 +1,4 @@
-FROM jboss/keycloak-mysql:3.2.1.Final
+FROM jboss/keycloak:3.4.3.Final
 CMD ["-b", "0.0.0.0", "--server-config", "standalone-ha.xml"]
 
 RUN rm keycloak/standalone/configuration/standalone.xml
