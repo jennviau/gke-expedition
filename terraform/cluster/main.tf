@@ -17,26 +17,37 @@ module "cluster" {
 
 module "keycloak" {
   source = "../modules/keycloak"
-  //auth
-  client_certificate = "${module.gke.client_certificate}"
-  client_key = "${module.gke.client_key}"
-  cluster_ca_certificate = "${module.gke.cluster_ca_certificate}"
-  host = 
-  //keycloak vars
+  
   name_space = "keycloak"
-  app_name   = "keycloak"
-  app_image  = "gcr.io/keycloak-208622/keycloak-ha-mysql:latest"
+  //Common  -- use vault for this
+  db_user           = "keycloak"
+  db_password       = "keycloak"
+  db_instance_name  = "keycloak"
+  //auth
+  client_certificate      = "${module.gke.client_certificate}"
+  client_key              = "${module.gke.client_key}"
+  cluster_ca_certificate  = "${module.gke.cluster_ca_certificate}"
+
+  //keycloak vars  - Also use vault here....
+  keycloak_admin_user = "automateit"
+  keycloak_admin_pass = "This isn't right!"
+  app_name            = "keycloak"
+  app_image           = "gcr.io/keycloak-208622/keycloak-ha-mysql:latest"
 
   // db vars
-  db_name =   "mariadb"
-  db_image = "gcr.io/keycloak-208622/mariadb:10.1"
+  db_name         = "mariadb"
+  db_image        = "gcr.io/keycloak-208622/mariadb:10.1"
   db_service_name = "mysql"
+  db_replicas     = 3
 
+ // Service Vars
+ app_service_name = "keycloak-internal"
 }
 
 module "dns" {
   source = "../modules/dns"
-  ip_address = "{$module.keycloak.ip_address}"
+
+  ip_address  = "{$module.keycloak.ip_address}"
   static_zone = "automateit"
   static_name = "gke"
 }

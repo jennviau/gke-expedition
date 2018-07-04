@@ -1,5 +1,4 @@
 // DNS information
-
 variable "static_zone" {
   type        = "string"
   default     = ""

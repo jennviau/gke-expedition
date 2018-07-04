@@ -1,6 +1,6 @@
 resource "kubernetes_namespace" "keycloak" {
   metadata {
-    name = "keycloak"
+    name = "${{var.name_space}"
   }
 }
 
@@ -15,7 +15,7 @@ resource "kubernetes_replication_controller" "database" {
   }
 
   spec {
-    replicas = 3
+    replicas = "${var.db_replicas}"
 
     selector {
       app = "${var.db_name}"
@@ -62,17 +62,17 @@ resource "kubernetes_replication_controller" "database" {
 
         env {
           name  = "MYSQL_DATABASE"
-          value = "keycloak"
+          value = "${var.db_instance_name}"
         }
 
         env {
           name  = "MYSQL_USER"
-          value = "keycloak"
+          value = "${var.db.user}"
         }
 
         env {
           name  = "MYSQL_PASSWORD"
-          value = "keycloak"
+          value = "${var.db_password}"
         }
 
         env {
@@ -202,17 +202,17 @@ resource "kubernetes_replication_controller" "keycloak" {
 
         env {
           name  = "MYSQL_DATABASE"
-          value = "keycloak"
+          value = "${var.db_instance_name}"
         }
 
         env {
           name  = "MYSQL_USERNAME"
-          value = "keycloak"
+          value = "${var.db.user}"
         }
 
         env {
           name  = "MYSQL_PASSWORD"
-          value = "keycloak"
+          value = "${var.db_password}"
         }
 
         env {
@@ -222,7 +222,7 @@ resource "kubernetes_replication_controller" "keycloak" {
 
         env {
           name  = "MYSQL_PORT_3306_TCP_ADDR"
-          value = "mysql.keycloak"
+          value = "${var.db_service_name}.${var.name_space}"
         }
 
         env {
@@ -232,12 +232,12 @@ resource "kubernetes_replication_controller" "keycloak" {
 
         env {
           name  = "KEYCLOAK_USER"
-          value = "admin"
+          value = "${var.keycloak_admin_user}"
         }
 
         env {
           name  = "KEYCLOAK_PASSWORD"
-          value = "test"
+          value = "${var.keycloak_admin_pass}"
         }
       }
     }
