@@ -1,6 +1,6 @@
 resource "kubernetes_namespace" "keycloak" {
   metadata {
-    name = "${{var.name_space}"
+    name = "${var.name_space}"
   }
 }
 
@@ -67,7 +67,7 @@ resource "kubernetes_replication_controller" "database" {
 
         env {
           name  = "MYSQL_USER"
-          value = "${var.db.user}"
+          value = "${var.db_user}"
         }
 
         env {
@@ -207,7 +207,7 @@ resource "kubernetes_replication_controller" "keycloak" {
 
         env {
           name  = "MYSQL_USERNAME"
-          value = "${var.db.user}"
+          value = "${var.db_user}"
         }
 
         env {
@@ -232,12 +232,17 @@ resource "kubernetes_replication_controller" "keycloak" {
 
         env {
           name  = "KEYCLOAK_USER"
-          value = "${var.keycloak_admin_user}"
+          value = "admin"
         }
 
         env {
           name  = "KEYCLOAK_PASSWORD"
-          value = "${var.keycloak_admin_pass}"
+          value = "not4u2cee"
+        }
+
+        env {
+          name  = "JGROUPS_STACK"
+          value = "tcp"
         }
       }
     }
@@ -246,12 +251,11 @@ resource "kubernetes_replication_controller" "keycloak" {
 
 resource "kubernetes_service" "keycloak" {
   metadata {
-    name      = "keycloak-internal"
+    name      = "keycloak"
     namespace = "${var.name_space}"
 
     labels {
-      app     = "${var.app_name}"
-      service = "internal"
+      app = "${var.app_name}"
     }
   }
 
@@ -260,9 +264,12 @@ resource "kubernetes_service" "keycloak" {
       app = "${kubernetes_replication_controller.keycloak.metadata.0.labels.app}"
     }
 
-    type             = "ClusterIP"
+    port {
+      port        = 80
+      target_port = 8080
+    }
+
+    session_affinity = "ClientIP"
+    type             = "LoadBalancer"
   }
 }
-
-
-

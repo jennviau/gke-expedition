@@ -1,11 +1,16 @@
 // DNS information
-variable "static_zone" {
+variable "zone_name" {
   type        = "string"
   default     = ""
   description = "Zone name to create DNS record set under, using ClouDNS"
 }
-variable "static_name" {
-  type = string
-  default = ""
+
+variable "record_name" {
+  type        = "string"
+  default     = ""
   description = "Name of A record to be created"
+}
+
+variable "ip_address" {
+  default = ""
 }

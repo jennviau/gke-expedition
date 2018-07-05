@@ -1,16 +1,10 @@
-//kubernetes connection information
-variable "host" {}
-variable "client_certificate" {}
-variable "client_key" {}
-variable "cluster_ca_certificate" {}
-
 //Used by Both DB and APP
 variable "name_space" {
   type    = "string"
   default = ""
 }
 
-variable "db_user"{
+variable "db_user" {
   default = "keycloak"
 }
 
