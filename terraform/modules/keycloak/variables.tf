@@ -4,6 +4,14 @@ variable "name_space" {
   default = ""
 }
 
+variable "region" {
+  default = ""
+}
+
+variable "project_name" {
+  default = ""
+}
+
 variable "db_user" {
   default = "keycloak"
 }
@@ -33,6 +41,21 @@ variable "db_replicas" {
 variable "db_service_name" {
   type    = "string"
   default = "mysql"
+}
+
+variable "db_volume_name" {
+  type    = "string"
+  default = "datadir"
+}
+
+variable "db_volume_size" {
+  type    = "string"
+  default = "5Gi"
+}
+
+variable "db_volume_zones" {
+  type    = "list"
+  default = []
 }
 
 //App Specific

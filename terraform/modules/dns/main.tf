@@ -6,7 +6,7 @@ data "google_dns_managed_zone" "cloud" {
 resource "google_dns_record_set" "service-static-ip" {
   name         = "${var.record_name}.${data.google_dns_managed_zone.cloud.dns_name}"
   type         = "A"
-  ttl          = 300
+  ttl          = 60
   project      = "keycloak-208622"
   managed_zone = "${data.google_dns_managed_zone.cloud.name}"
 

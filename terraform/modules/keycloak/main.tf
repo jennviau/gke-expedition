@@ -4,6 +4,60 @@ resource "kubernetes_namespace" "keycloak" {
   }
 }
 
+/*resource "google_compute_disk" "mysql" {
+  name        = "${var.db_volume_name}"
+  project     = "${var.project_name}"
+  size        = "${var.db_volume_size}"
+  type        = "pd-standard"
+  zones       = ["${var.db_volume_zones}"]
+  replication = "regional-pd"
+}
+*/
+/*resource "kubernetes_persistent_volume" "mysql" {
+  metadata {
+    name = "${var.db_volume_name}"
+  }
+
+  spec {
+    capacity {
+      storage = "${var.db_volume_size}Gi"
+    }
+
+    storage_class_name = "pd-standard"
+    access_modes       = ["ReadWriteOnce"]
+
+    persistent_volume_source {
+      gce_persistent_disk {
+        pd_name = "${var.db_volume_name}"
+      }
+    }
+  }
+}
+
+resource "kubernetes_persistent_volume_claim" "mysql" {
+  metadata {
+    name      = "${var.db_volume_name}"
+    namespace = "keycloak"
+
+    labels {
+      app = "${var.db_name}"
+    }
+  }
+
+  spec {
+    resources {
+      requests {
+        storage = "${var.db_volume_size}Gi"
+      }
+    }
+
+    storage_class_name = "pd-standard"
+
+    access_modes = ["ReadWriteOnce"]
+    volume_name  = "${var.db_volume_name}"
+  }
+}
+*/
 resource "kubernetes_replication_controller" "database" {
   metadata {
     name      = "db"
@@ -79,6 +133,16 @@ resource "kubernetes_replication_controller" "database" {
           name  = "MYSQL_INITDB_SKIP_TZINFO"
           value = "yes"
         }
+
+        volume_mount {
+          name       = "${var.db_volume_name}"
+          mount_path = "/var/lib/mysql"
+        }
+      }
+
+      volume {
+        name      = "${var.db_volume_name}"
+        empty_dir = {}
       }
     }
   }

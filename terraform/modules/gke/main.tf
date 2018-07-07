@@ -1,32 +1,26 @@
-data "google_compute_zones" "available" {}
-
 resource "google_container_cluster" "cluster" {
-  lifecycle {
-    ignore_changes = ["node_pool"]
-  }
-
-  name               = "${local.merged_settings["cluster_name"]}"
-  region             = "${local.merged_settings["region_name"]}"
-  initial_node_count = "${local.merged_settings["cluster_node_count"]}"
-  min_master_version = "${local.merged_settings["gke_min_master_version"]}"
-  enable_legacy_abac = "${local.merged_settings["enable_legacy_abac"]}"
-  private_cluster    = "${local.merged_settings["private_cluster"]}"
+  name               = "${var.cluster_name}"
+  region             = "${var.region_name}"
+  additional_zones   = "${var.zones}"
+  initial_node_count = "${var.cluster_node_count}"
+  min_master_version = "${var.gke_min_master_version}"
+  enable_legacy_abac = "${var.enable_legacy_abac}"
 
   master_auth {
-    username = "${local.merged_settings["master_username"]}"
-    password = "${local.merged_settings["master_password"]}"
+    username = "${var.master_username}"
+    password = "${var.master_password}"
   }
 
   maintenance_policy {
     daily_maintenance_window {
-      start_time = "${local.merged_settings["daily_maintenance_window"]}"
+      start_time = "${var.daily_maintenance_window}"
     }
   }
 
   node_config {
-    machine_type = "${local.merged_settings["node_machine_type"]}"
-    disk_size_gb = "${local.merged_settings["node_disk_size"]}"
-    image_type   = "${local.merged_settings["node_image_type"]}"
+    machine_type = "${var.node_type}"
+    disk_size_gb = "${var.disk_size}"
+    image_type   = "${var.image_type}"
 
     oauth_scopes = [
       "https://www.googleapis.com/auth/compute",
